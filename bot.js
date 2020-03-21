@@ -21,8 +21,8 @@ var bot = new Discord.Client({
    autorun: true
 });
 //Test Queue
-//let queue = ['Zwicker', 'JP', 'Bobby', 'Ricky', 'Julian', 'Bubbles'];
-let queue = [];
+let queue = ['Zwicker', 'JP', 'Bobby', 'Ricky', 'Julian', 'Bubbles'];
+//let queue = [];
 let queueRandomized = [];
 let remainingPlayers = [];
 let orange = [];
@@ -62,7 +62,17 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         var cmd = args[0];
 
         switch(cmd) {
-            case 'queue':
+            case 'help':
+                bot.sendMessage({
+                    to: channelID,
+                    message: '!join: Adds user into the queue to play\n' +
+                             '!leave: Removes user from the queue\n' +
+                             '!show: Displays all users currently in queue\n' +
+                             '!random: Makes random teams (Need 6 players)\n' +
+                             '!captains: Assigns two captains from the queue (Need 6 players)'
+                });
+                break;
+            case 'join':
                 if (!queue.includes(user) && queue.length <= 6){
                     queue.push(user);
                     bot.sendMessage({
@@ -76,7 +86,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     });
                 }
                 break;
-            case 'unqueue':
+            case 'leave':
                 if (queue.includes(user)){
                     remove(queue, user);
                     bot.sendMessage({
@@ -134,7 +144,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     queueRandomized = randomize(queue);
                     orangeCaptain = queueRandomized[0];
                     blueCaptain = queueRandomized[5];
-                    remainingPlayers = queueRandomized.splice(1,4);
+                    remainingPlayers = queueRandomized.slice(1,5);
                     bot.sendMessage({
                         to: channelID,
                         message: '```Orange Captain: ' + orangeCaptain + '\n' +
