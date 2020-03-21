@@ -21,8 +21,8 @@ var bot = new Discord.Client({
    autorun: true
 });
 //Test Queue
-let queue = ['Zwicker', 'JP', 'Bobby', 'Ricky', 'Julian', 'Bubbles'];
-//let queue = [];
+//let queue = ['Zwicker', 'JP', 'Bobby', 'Ricky', 'Julian', 'Bubbles'];
+let queue = [];
 let queueRandomized = [];
 let remainingPlayers = [];
 let orange = [];
