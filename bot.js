@@ -74,6 +74,11 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     'Blue Captain: ' + blueCaptain + '```' +
                     'Remaining Players: `' + remainingPlayers + '`'
             });
+        } else {
+            bot.sendMessage({
+                to: channelID,
+                message: 'Not enough players in queue! (Only ' + queue.length + ')'
+            });
         }
     }
     function help() {
