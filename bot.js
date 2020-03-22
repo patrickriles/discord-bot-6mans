@@ -84,7 +84,9 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     function help() {
         bot.sendMessage({
             to: channelID,
-            message: '!join: Adds user into the queue to play\n' +
+            message:
+                '!help: Shows commands\n' +
+                '!join: Adds user into the queue to play\n' +
                 '!leave: Removes user from the queue\n' +
                 '!show: Displays all users currently in queue\n' +
                 '!random: Makes random teams (Need 6 players)\n' +
