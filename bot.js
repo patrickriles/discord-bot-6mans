@@ -58,7 +58,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         } else {
             bot.sendMessage({
                 to: channelID,
-                message: 'Not enough players in queue! (Only ' + queue.length + ')'
+                message: 'Not enough players in the queue! (Only ' + queue.length + ')'
             });
         }
     }
@@ -115,7 +115,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             util.remove(queue, user);
             bot.sendMessage({
                 to: channelID,
-                message: user + ' has been removed from queue. Current queue: ' + queue
+                message: user + ' has been removed from the queue. Current queue: ' + queue
             });
         } else {
             bot.sendMessage({
@@ -129,12 +129,12 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             queue.push(user);
             bot.sendMessage({
                 to: channelID,
-                message: user + ' has been added to queue. Current queue: ' + queue
+                message: user + ' has been added to the queue. Current queue: ' + queue
             });
         } else {
             bot.sendMessage({
                 to: channelID,
-                message: 'User is already in queue!'
+                message: 'User is already in the queue!'
             });
         }
     }
