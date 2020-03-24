@@ -22,9 +22,9 @@ var bot = new Discord.Client({
 });
 
 //Test Queue
-let queue = ['HazardX','Zwicker', 'JP', 'Ricky', 'Julian', 'Bubbles', 'Max', 'George'];
+//let queue = ['HazardX','Zwicker', 'JP', 'Ricky', 'Julian', 'Bubbles', 'Max', 'George'];
 
-//let queue = [];
+let queue = [];
 let queueRandomized = [];
 let remainingPlayers = [];
 let orange = [];
@@ -67,8 +67,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     function makeCaptains() {
         if (queue.length >= 6){
             queueRandomized = util.randomize(queue);
-            //orangeCaptain = queueRandomized[0];
-            orangeCaptain = 'HazardX';
+            orangeCaptain = queueRandomized[0];
             blueCaptain = queueRandomized[5];
             orange.push(orangeCaptain);
             blue.push(blueCaptain);
@@ -83,6 +82,47 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             bot.sendMessage({
                 to: channelID,
                 message: 'Not enough players in queue! (Only ' + queue.length + ')'
+            });
+        }
+    }
+    function makePicks() {
+        if (orangePick && user === orangeCaptain){
+            for (let i = 0; i < remainingPlayers.length; i++){
+                if (args[1] === remainingPlayers[i]){
+                    orange.push(remainingPlayers[i]);
+                    remainingPlayers.splice(i,1);
+                    orangePick = false;
+                    bluePick = true;
+                }
+            }
+            bot.sendMessage({
+                to: channelID,
+                message: '```Orange Team: ' + orange + '\n' +
+                    'Blue Team: ' + blue + '```' +
+                    'Remaining Players: `' + remainingPlayers + '`'
+            });
+        }
+        else if (bluePick && user === blueCaptain){
+            for (let i = 0; i < remainingPlayers.length; i++){
+                if (args[1] === remainingPlayers[i]){
+                    blue.push(remainingPlayers[i]);
+                    remainingPlayers.splice(i,1);
+                    bluePick = false;
+                    orangePick = true;
+                }
+            }
+            bot.sendMessage({
+                to: channelID,
+                message: '```Orange Team: ' + orange + '\n' +
+                    'Blue Team: ' + blue + '```' +
+                    'Remaining Players: `' + remainingPlayers + '`'
+            });
+            bluePick = false;
+            orangePick = true;
+        } else {
+            bot.sendMessage({
+                to: channelID,
+                message: 'You are not a captain or it is not your teams pick.'
             });
         }
     }
@@ -185,45 +225,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 clear();
                 break;
             case 'pick':
-                if (orangePick && user === orangeCaptain){
-                    for (let i = 0; i < remainingPlayers.length; i++){
-                        if (args[1] === remainingPlayers[i]){
-                            orange.push(remainingPlayers[i]);
-                            remainingPlayers.splice(i,1);
-                            orangePick = false;
-                            bluePick = true;
-                        }
-                    }
-                    bot.sendMessage({
-                        to: channelID,
-                        message: '```Orange Team: ' + orange + '\n' +
-                            'Blue Team: ' + blue + '```' +
-                            'Remaining Players: `' + remainingPlayers + '`'
-                    });
-                }
-                else if (bluePick && user === blueCaptain){
-                    for (let i = 0; i < remainingPlayers.length; i++){
-                        if (args[1] === remainingPlayers[i]){
-                            blue.push(remainingPlayers[i]);
-                            remainingPlayers.splice(i,1);
-                            bluePick = false;
-                            orangePick = true;
-                        }
-                    }
-                    bot.sendMessage({
-                        to: channelID,
-                        message: '```Orange Team: ' + orange + '\n' +
-                            'Blue Team: ' + blue + '```' +
-                            'Remaining Players: `' + remainingPlayers + '`'
-                    });
-                    bluePick = false;
-                    orangePick = true;
-                } else {
-                    bot.sendMessage({
-                        to: channelID,
-                        message: 'You are not a captain or it is not your teams pick.'
-                    });
-                }
+                makePicks();
                 break;
          }
      }
