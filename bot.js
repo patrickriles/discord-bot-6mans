@@ -22,15 +22,16 @@ var bot = new Discord.Client({
 });
 
 //Test Queue
-//let queue = ['HazardX','Zwicker', 'JP', 'Ricky', 'Julian', 'Bubbles', 'Max', 'George'];
+let queue = ['HazardX','Zwicker', 'JP', 'Ricky', 'Julian', 'arkin', 'Max', 'George'];
 
-let queue = [];
+//let queue = [];
 let queueRandomized = [];
 let remainingPlayers = [];
 let orange = [];
 let blue = [];
 let orangeCaptain = '';
 let blueCaptain = '';
+let captainsPicked = false;
 let orangePick = false;
 let bluePick = false;
 bot.on('ready', function (evt) {
@@ -39,6 +40,47 @@ bot.on('ready', function (evt) {
     logger.info(bot.username + ' - (' + bot.id + ')');
 });
 bot.on('message', function (user, userID, channelID, message, evt) {
+    //Print Functions
+    function printRemainingPlayers() {
+        let rp = '';
+        for (let i = 0; i < remainingPlayers.length; i++){
+            if (i === remainingPlayers.length - 1){
+                rp += i+1 + '. ' + remainingPlayers[i];
+            } else {
+                rp += i+1 + '. ' + remainingPlayers[i] + ', ';
+            }
+        }
+        return rp;
+    }
+    function printTeamsAndRemaining(){
+        bot.sendMessage({
+            to: channelID,
+            message: '```Orange Team: ' + orange + '\n' +
+                'Blue Team: ' + blue + '```' +
+                'Remaining Players: `' + printRemainingPlayers() + '`'
+        });
+    }
+    function printTeamsAndLeftOut(){
+        bot.sendMessage({
+            to: channelID,
+            message: '```Orange Team: ' + orange + '\n' + 'Blue Team: ' + blue + '```' +
+                'Players sitting out: `' + printRemainingPlayers() + '`'
+        });
+    }
+    function printTeams(){
+        bot.sendMessage({
+            to: channelID,
+            message: '```Orange Team: ' + orange + '\n' + 'Blue Team: ' + blue + '```'
+        });
+    }
+    function printNotEnoughPlayers() {
+        bot.sendMessage({
+            to: channelID,
+            message: 'Not enough players in the queue! (Only ' + queue.length + ')'
+        });
+    }
+
+    //Team Functions
     function randomizeTeams(){
         if (queue.length >= 6){
             queueRandomized = util.randomize(queue);
@@ -46,79 +88,66 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             blue = queueRandomized.slice(3,6);
             if (queueRandomized.length > 6){
                 remainingPlayers = queueRandomized.slice(6, queueRandomized.length);
-                bot.sendMessage({
-                    to: channelID,
-                    message: '```Orange Team: ' + orange + '\n' + 'Blue Team: ' + blue + '```' +
-                        'Players sitting out: `' + remainingPlayers + '`'
-                });
+                printTeamsAndLeftOut();
             } else {
-                bot.sendMessage({
-                    to: channelID,
-                    message: '```Orange Team: ' + orange + '\n' + 'Blue Team: ' + blue + '```'
-                });
+                printTeams();
             }
         } else {
-            bot.sendMessage({
-                to: channelID,
-                message: 'Not enough players in the queue! (Only ' + queue.length + ')'
-            });
+            printNotEnoughPlayers();
         }
     }
     function makeCaptains() {
         if (queue.length >= 6){
+            captainsPicked = true;
             queueRandomized = util.randomize(queue);
-            orangeCaptain = queueRandomized[0];
-            blueCaptain = queueRandomized[5];
+            //orangeCaptain = queueRandomized[0];
+            orangeCaptain = 'HazardX';
+           // blueCaptain = queueRandomized[5];
+            blueCaptain = 'arkin';
             orange.push(orangeCaptain);
             blue.push(blueCaptain);
             remainingPlayers = queueRandomized.slice(1,5);
-            bot.sendMessage({
-                to: channelID,
-                message: '```Orange Captain: ' + orangeCaptain + '\n' +
-                    'Blue Captain: ' + blueCaptain + '```' +
-                    'Remaining Players: `' + remainingPlayers + '`'
-            });
+            if (remainingPlayers.length > 0){
+                printTeamsAndRemaining();
+            } else {
+                printTeams();
+            }
         } else {
-            bot.sendMessage({
-                to: channelID,
-                message: 'Not enough players in queue! (Only ' + queue.length + ')'
-            });
+            printNotEnoughPlayers();
         }
     }
     function makePicks() {
         if (orangePick && user === orangeCaptain){
-            for (let i = 0; i < remainingPlayers.length; i++){
-                if (args[1] === remainingPlayers[i]){
-                    orange.push(remainingPlayers[i]);
-                    remainingPlayers.splice(i,1);
-                    orangePick = false;
-                    bluePick = true;
-                }
+            if ((args[1]) > 0 && (args[1] - 1) < remainingPlayers.length){
+                orange.push(remainingPlayers[args[1] - 1]);
+                remainingPlayers.splice(args[1] - 1,1);
+                orangePick = false;
+                bluePick = true;
             }
-            bot.sendMessage({
-                to: channelID,
-                message: '```Orange Team: ' + orange + '\n' +
-                    'Blue Team: ' + blue + '```' +
-                    'Remaining Players: `' + remainingPlayers + '`'
-            });
+            if (remainingPlayers.length > 0){
+                printTeamsAndRemaining();
+            } else {
+                printTeams();
+            }
         }
         else if (bluePick && user === blueCaptain){
-            for (let i = 0; i < remainingPlayers.length; i++){
-                if (args[1] === remainingPlayers[i]){
-                    blue.push(remainingPlayers[i]);
-                    remainingPlayers.splice(i,1);
-                    bluePick = false;
-                    orangePick = true;
-                }
+            if ((args[1]) > 0 && (args[1] - 1) < remainingPlayers.length){
+                blue.push(remainingPlayers[args[1] - 1]);
+                remainingPlayers.splice(args[1] - 1,1);
+                orangePick = true;
+                bluePick = false;
             }
+            if (remainingPlayers.length > 0){
+                printTeamsAndRemaining();
+            } else {
+                printTeams();
+            }
+        }
+        else if (captainsPicked === false){
             bot.sendMessage({
                 to: channelID,
-                message: '```Orange Team: ' + orange + '\n' +
-                    'Blue Team: ' + blue + '```' +
-                    'Remaining Players: `' + remainingPlayers + '`'
+                message: 'Captains have not been selected!'
             });
-            bluePick = false;
-            orangePick = true;
         } else {
             bot.sendMessage({
                 to: channelID,
