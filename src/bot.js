@@ -31,6 +31,8 @@ let blueCaptain = '';
 let captainsPicked = false;
 let orangePick = false;
 let bluePick = false;
+let snake = false;
+let linear = true;
 bot.on('ready', function (evt) {
     logger.info('Connected');
     logger.info('Logged in as: ');
@@ -95,8 +97,13 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             if ((args[1]) > 0 && (args[1] - 1) < remainingPlayers.length){
                 blue.push(remainingPlayers[args[1] - 1]);
                 remainingPlayers.splice(args[1] - 1,1);
-                orangePick = true;
-                bluePick = false;
+                if (!snake){
+                    orangePick = true;
+                    bluePick = false;
+                } else {
+                    print.printTeamsAndRemainingSnake();
+                    snake = false;
+                }
             }
             if (remainingPlayers.length > 0){
                print.printTeamsAndRemaining(bot, channelID, blue, orange, remainingPlayers);
@@ -149,9 +156,29 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     }
     function showTeams() {
         if (orange.length > 0 && blue.length > 0){
-            print.printTeams();
+            print.printTeams(bot, channelID, blue, orange);
         } else {
             print.printNotOnePlayerOnEachTeam(bot, channelID);
+        }
+    }
+    function draftType() {
+        if (user === orangeCaptain || user === blueCaptain){
+            if (args[1] === '1'){
+                linear = true;
+                snake = false;
+            }
+            else if (args[1] === '2'){
+                linear = false;
+                snake = true;
+            }
+            else {
+                print.printInvalidDraftType(bot, channelID);
+            }
+        }
+        else if (captainsPicked === true) {
+            print.printNotCaptain(bot, channelID);
+        } else {
+            print.printCaptainsNotSelected(bot, channelID);
         }
     }
     /********************
@@ -199,6 +226,9 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 break;
             case 'teams':
                 showTeams();
+                break;
+            case 'draft':
+                draftType();
                 break;
          }
      }

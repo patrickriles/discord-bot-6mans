@@ -10,7 +10,8 @@ module.exports = {
                 '!random: Makes random teams (Need 6 players)\n' +
                 '!captains: Assigns two captains from the queue (Need 6 players)\n' +
                 '!pick (number): Picks a player to a team if user is a captain\n' +
-                '!teams: Shows teams'
+                '!teams: Shows teams\n' +
+                '!draft (number): Captain only command to pick draft type (1 = linear, 2 = snake)'
         });
     },
      printClearMsg: function (bot, channelID) {
@@ -80,6 +81,14 @@ module.exports = {
                 'Remaining Players: `' + printRemainingPlayers(remainingPlayers) + '`'
         });
     },
+    printTeamsAndRemainingSnake: function(bot, channelID, blue, orange, remainingPlayers){
+        bot.sendMessage({
+            to: channelID,
+            message: '``` Blue pick again. \nOrange Team: ' + orange + '\n' +
+                'Blue Team: ' + blue + '```' +
+                'Remaining Players: `' + printRemainingPlayers(remainingPlayers) + '`'
+        });
+    },
     printTeamsAndLeftOut: function(bot, channelID, blue, orange, remainingPlayers){
         bot.sendMessage({
             to: channelID,
@@ -121,6 +130,18 @@ module.exports = {
         bot.sendMessage({
             to: channelID,
             message: 'You are not a captain or it is not your teams pick.'
+        });
+    },
+    printInvalidDraftType: function(bot, channelID) {
+        bot.sendMessage({
+            to: channelID,
+            message: 'Not a valid draft type!'
+        });
+    },
+    printNotCaptain: function(bot, channelID) {
+        bot.sendMessage({
+            to: channelID,
+            message: 'You are not a captain!'
         });
     }
 };
