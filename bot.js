@@ -40,7 +40,9 @@ bot.on('ready', function (evt) {
     logger.info(bot.username + ' - (' + bot.id + ')');
 });
 bot.on('message', function (user, userID, channelID, message, evt) {
-    //Print Functions
+    /**********************
+     *   Print Functions  *
+     **********************/
     function printRemainingPlayers() {
         let rp = '';
         for (let i = 0; i < remainingPlayers.length; i++){
@@ -79,8 +81,9 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             message: 'Not enough players in the queue! (Only ' + queue.length + ')'
         });
     }
-
-    //Team Functions
+    /********************
+     *  Team Functions  *
+     ********************/
     function randomizeTeams(){
         if (queue.length >= 6){
             queueRandomized = util.randomize(queue);
@@ -164,7 +167,9 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 '!leave: Removes user from the queue\n' +
                 '!show: Displays all users currently in queue\n' +
                 '!random: Makes random teams (Need 6 players)\n' +
-                '!captains: Assigns two captains from the queue (Need 6 players)'
+                '!captains: Assigns two captains from the queue (Need 6 players)\n' +
+                '!pick (number): Picks a player to a team if user is a captain\n' +
+                '!teams: Shows teams'
         });
     }
     function clear() {
@@ -214,8 +219,9 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             });
         }
     }
-
-
+    /********************
+     *     Commands     *
+     ********************/
     if (message.substring(0, 1) === '!') {
         var args = message.substring(1).split(' ');
         var cmd = args[0];
@@ -255,6 +261,9 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 break;
             case 'pick':
                 makePicks();
+                break;
+            case 'teams':
+                printTeams();
                 break;
          }
      }
