@@ -219,6 +219,16 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             });
         }
     }
+    function showTeams() {
+        if (orange.length > 0 && blue.length > 0){
+            printTeams();
+        } else {
+            bot.sendMessage({
+                to: channelID,
+                message: 'There isn\'t at least one player on each team!'
+            });
+        }
+    }
     /********************
      *     Commands     *
      ********************/
@@ -263,7 +273,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 makePicks();
                 break;
             case 'teams':
-                printTeams();
+                showTeams();
                 break;
          }
      }
