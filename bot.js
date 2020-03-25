@@ -22,9 +22,9 @@ var bot = new Discord.Client({
 });
 
 //Test Queue
-let queue = ['HazardX','Zwicker', 'JP', 'Ricky', 'Julian', 'arkin', 'Max', 'George'];
+//let queue = ['HazardX','Zwicker', 'JP', 'Ricky', 'Julian', 'arkin', 'Max', 'George'];
 
-//let queue = [];
+let queue = [];
 let queueRandomized = [];
 let remainingPlayers = [];
 let orange = [];
@@ -100,10 +100,10 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         if (queue.length >= 6){
             captainsPicked = true;
             queueRandomized = util.randomize(queue);
-            //orangeCaptain = queueRandomized[0];
-            orangeCaptain = 'HazardX';
-           // blueCaptain = queueRandomized[5];
-            blueCaptain = 'arkin';
+            orangeCaptain = queueRandomized[0];
+            //orangeCaptain = 'HazardX';
+            blueCaptain = queueRandomized[5];
+            //blueCaptain = 'arkin';
             orange.push(orangeCaptain);
             blue.push(blueCaptain);
             remainingPlayers = queueRandomized.slice(1,5);
