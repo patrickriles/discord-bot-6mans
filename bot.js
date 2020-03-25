@@ -78,7 +78,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     function printNotEnoughPlayers() {
         bot.sendMessage({
             to: channelID,
-            message: 'Not enough players in the queue! (Only ' + queue.length + ')'
+            message: 'Not enough players in the queue! (' + queue.length + ')'
         });
     }
     /********************
@@ -105,13 +105,17 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             queueRandomized = util.randomize(queue);
             orangeCaptain = queueRandomized[0];
             //orangeCaptain = 'HazardX';
-            blueCaptain = queueRandomized[5];
+            blueCaptain = queueRandomized[queueRandomized.length - 1];
             //blueCaptain = 'arkin';
             orange.push(orangeCaptain);
             blue.push(blueCaptain);
-            remainingPlayers = queueRandomized.slice(1,5);
+            remainingPlayers = queueRandomized.slice(1,queueRandomized.length - 1);
             if (remainingPlayers.length > 0){
-                printTeamsAndRemaining();
+                if (blue.length === 3 && orange.length ===3){
+                    printTeamsAndLeftOut();
+                } else {
+                    printTeamsAndRemaining();
+                }
             } else {
                 printTeams();
             }
@@ -151,7 +155,14 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 to: channelID,
                 message: 'Captains have not been selected!'
             });
-        } else {
+        }
+        else if (blue.length === 3 && orange.length ===3){
+            bot.sendMessage({
+                to: channelID,
+                message: 'Teams have already been selected.'
+            });
+        }
+        else {
             bot.sendMessage({
                 to: channelID,
                 message: 'You are not a captain or it is not your teams pick.'
@@ -206,13 +217,20 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         }
     }
     function join() {
-        if (!queue.includes(user)){
+        if (!queue.includes(user) && queue.length < 6){
             queue.push(user);
             bot.sendMessage({
                 to: channelID,
                 message: user + ' has been added to the queue. Current queue: ' + queue
             });
-        } else {
+        }
+        else if (queue.length > 6){
+            bot.sendMessage({
+                to: channelID,
+                message: 'Queue is full!'
+            });
+        }
+        else {
             bot.sendMessage({
                 to: channelID,
                 message: 'User is already in the queue!'
