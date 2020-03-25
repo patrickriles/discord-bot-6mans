@@ -2,7 +2,7 @@
   "name": "6mans-goblin-bot",
   "version": "1.0.0",
   "description": "6Mans Bot",
-  "main": "bot.js",
+  "main": "src/bot.js",
   "author": "HazardX",
   "dependencies": {
     "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
