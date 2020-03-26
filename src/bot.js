@@ -80,44 +80,50 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         }
     }
     function makePicks() {
-        if (orangePick && user === orangeCaptain){
+        if (captainsPicked === false){
+            print.printCaptainsNotSelected(bot, channelID);
+        }
+        else if (blue.length === 3 && orange.length === 3){
+            print.printTeamsAreFull(bot, channelID);
+        }
+        else if (isNaN(Number(args[1])) || args[1] < 0 || args[1] > remainingPlayers.length + 1){
+            print.printInvalidPick(bot, channelID);
+        }
+        else if (orangePick && user === orangeCaptain){
             if ((args[1]) > 0 && (args[1] - 1) < remainingPlayers.length){
                 orange.push(remainingPlayers[args[1] - 1]);
                 remainingPlayers.splice(args[1] - 1,1);
                 orangePick = false;
                 bluePick = true;
-            }
-            if (remainingPlayers.length > 0){
-                print.printTeamsAndRemaining(bot, channelID, blue, orange, remainingPlayers);
-            } else {
-                print.printTeams(bot, channelID, blue, orange);
+                if (remainingPlayers.length > 0){
+                    print.printTeamsAndRemaining(bot, channelID, blue, orange, remainingPlayers);
+                } else {
+                    print.printTeams(bot, channelID, blue, orange);
+                }
             }
         }
         else if (bluePick && user === blueCaptain){
             if ((args[1]) > 0 && (args[1] - 1) < remainingPlayers.length){
                 blue.push(remainingPlayers[args[1] - 1]);
                 remainingPlayers.splice(args[1] - 1,1);
-                if (!snake){
+                if (!snake || blue.length >= 3) {
                     orangePick = true;
                     bluePick = false;
+                }
+                if (remainingPlayers.length > 0){
+                    if (snake){
+                        print.printTeamsAndRemainingSnake(bot, channelID, blue, orange, remainingPlayers);
+                    } else {
+                        print.printTeamsAndRemaining(bot, channelID, blue, orange, remainingPlayers);
+                    }
+                    if (blue.length >= 2){
+                        snake = false;
+                    }
                 } else {
-                    print.printTeamsAndRemainingSnake();
-                    snake = false;
+                    print.printTeams(bot, channelID, blue, orange);
                 }
             }
-            if (remainingPlayers.length > 0){
-               print.printTeamsAndRemaining(bot, channelID, blue, orange, remainingPlayers);
-            } else {
-                print.printTeams(bot, channelID, blue, orange);
-            }
-        }
-        else if (captainsPicked === false){
-            print.printCaptainsNotSelected(bot, channelID);
-        }
-        else if (blue.length === 3 && orange.length ===3){
-            print.printTeamsAreFull(bot, channelID);
-        }
-        else {
+        } else {
             print.printNotCaptainOrNotTeamPick(bot, channelID);
         }
     }
@@ -125,11 +131,16 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         print.printHelp(bot, channelID);
     }
     function clear() {
-        print.printClearMsg(bot, channelID);
+        if (user === orangeCaptain || user === blueCaptain){
+            queue = [];
+            print.printClearMsg(bot, channelID);
+        } else {
+            print.printNotCaptain(bot,channelID);
+        }
     }
     function show() {
         if (queue.length > 0){
-            print.printCurrentQueue(bot, channelID, queu);
+            print.printCurrentQueue(bot, channelID, queue);
         } else {
             print.printEmptyQueue(bot, channelID);
         }
@@ -147,7 +158,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             queue.push(user);
             print.printCurrentQueueAfterUserJoin(bot, channelID, user, queue);
         }
-        else if (queue.length > 6){
+        else if (queue.length >= 6){
             print.printQueueIsFull(bot,channelID);
         }
         else {
@@ -166,10 +177,12 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             if (args[1] === '1'){
                 linear = true;
                 snake = false;
+                print.printLinearDraftType(bot, channelID)
             }
             else if (args[1] === '2'){
                 linear = false;
                 snake = true;
+                print.printSnakeDraftType(bot, channelID);
             }
             else {
                 print.printInvalidDraftType(bot, channelID);
@@ -218,7 +231,6 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 orangePick = true;
                 break;
             case 'clear':
-                queue = [];
                 clear();
                 break;
             case 'pick':

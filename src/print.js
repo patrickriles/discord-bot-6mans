@@ -78,22 +78,22 @@ module.exports = {
             to: channelID,
             message: '```Orange Team: ' + orange + '\n' +
                 'Blue Team: ' + blue + '```' +
-                'Remaining Players: `' + printRemainingPlayers(remainingPlayers) + '`'
+                'Remaining Players: `' + this.printRemainingPlayers(remainingPlayers) + '`'
         });
     },
     printTeamsAndRemainingSnake: function(bot, channelID, blue, orange, remainingPlayers){
         bot.sendMessage({
             to: channelID,
-            message: '``` Blue pick again. \nOrange Team: ' + orange + '\n' +
+            message: '```Blue pick again. \nOrange Team: ' + orange + '\n' +
                 'Blue Team: ' + blue + '```' +
-                'Remaining Players: `' + printRemainingPlayers(remainingPlayers) + '`'
+                'Remaining Players: `' + this.printRemainingPlayers(remainingPlayers) + '`'
         });
     },
     printTeamsAndLeftOut: function(bot, channelID, blue, orange, remainingPlayers){
         bot.sendMessage({
             to: channelID,
             message: '```Orange Team: ' + orange + '\n' + 'Blue Team: ' + blue + '```' +
-                'Players sitting out: `' + printRemainingPlayers(remainingPlayers) + '`'
+                'Players sitting out: `' + this.printRemainingPlayers(remainingPlayers) + '`'
         });
     },
     printTeams: function(bot, channelID, blue, orange){
@@ -136,6 +136,24 @@ module.exports = {
         bot.sendMessage({
             to: channelID,
             message: 'Not a valid draft type!'
+        });
+    },
+    printInvalidPick: function(bot, channelID) {
+        bot.sendMessage({
+            to: channelID,
+            message: 'Not a valid pick!'
+        });
+    },
+    printSnakeDraftType: function(bot, channelID) {
+        bot.sendMessage({
+            to: channelID,
+            message: 'Draft type is now snake.'
+        });
+    },
+    printLinearDraftType: function(bot, channelID) {
+        bot.sendMessage({
+            to: channelID,
+            message: 'Draft type is now linear.'
         });
     },
     printNotCaptain: function(bot, channelID) {
