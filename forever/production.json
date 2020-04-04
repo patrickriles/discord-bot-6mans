@@ -3,8 +3,8 @@
   "append": true,
   "watch": true,
   "script": "bot.js",
-  "sourceDir": "./src",
-  "logFile": "forever/logs/forever.log",
-  "outFile": "forever/logs/out.log",
-  "errFile": "forever/logs/error.log"
+  "sourceDir": "/home/pi/Documents/Projects/discord-bot-6mans/src",
+  "logFile": "/home/pi/Documents/Projects/discord-bot-6mans/forever/logs/forever.log",
+  "outFile": "/home/pi/Documents/Projects/discord-bot-6mans/forever/logs/out.log",
+  "errFile": "/home/pi/Documents/Projects/discord-bot-6mans/forever/logs/error.log"
 }
