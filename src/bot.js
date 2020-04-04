@@ -200,48 +200,50 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     if (message.substring(0, 1) === '!') {
         var args = message.substring(1).split(' ');
         var cmd = args[0];
-        switch(cmd) {
-            case 'help':
-                help();
-                break;
-            case 'join':
-                join();
-                break;
-            case 'leave':
-                leave();
-                break;
-            case 'show':
-                show();
-                break;
-            case 'random':
-                orange = [];
-                blue = [];
-                queueRandomized = [];
-                remainingPlayers = [];
-                randomizeTeams();
-                break;
-            case 'captains':
-                orangeCaptain = '';
-                blueCaptain = '';
-                orange = [];
-                blue = [];
-                remainingPlayers = [];
-                queueRandomized = [];
-                makeCaptains();
-                orangePick = true;
-                break;
-            case 'clear':
-                clear();
-                break;
-            case 'pick':
-                makePicks();
-                break;
-            case 'teams':
-                showTeams();
-                break;
-            case 'draft':
-                draftType();
-                break;
-         }
+        if (channelID === "690782409121333318"){
+            switch(cmd) {
+                case 'help':
+                    help();
+                    break;
+                case 'join':
+                    join();
+                    break;
+                case 'leave':
+                    leave();
+                    break;
+                case 'show':
+                    show();
+                    break;
+                case 'random':
+                    orange = [];
+                    blue = [];
+                    queueRandomized = [];
+                    remainingPlayers = [];
+                    randomizeTeams();
+                    break;
+                case 'captains':
+                    orangeCaptain = '';
+                    blueCaptain = '';
+                    orange = [];
+                    blue = [];
+                    remainingPlayers = [];
+                    queueRandomized = [];
+                    makeCaptains();
+                    orangePick = true;
+                    break;
+                case 'clear':
+                    clear();
+                    break;
+                case 'pick':
+                    makePicks();
+                    break;
+                case 'teams':
+                    showTeams();
+                    break;
+                case 'draft':
+                    draftType();
+                    break;
+            }
+        }
      }
 });
